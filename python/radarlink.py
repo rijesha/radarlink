@@ -11,7 +11,7 @@ class main:
 
     def __init__(self):
         self.shutdown = False
-        self.writebusy = False
+        self.filewritebusy = False
         self.initprocessing()
         self.initIVY()
         self.initFile()
@@ -48,10 +48,10 @@ class main:
             #           msg = self.mBEElink.ser.Readline()
             #           writetomaththread
             while (mBEEmsgwritten == False):
-                if (self.writebusy == False):
-                    self.writebusy = True
+                if (self.filewritebusy == False):
+                    self.filewritebusy = True
                     self.filewriter("mBEEmessage", msg)
-                    self.writebusy = False
+                    self.filewritebusy = False
                     mBEEmsgwritten == True
             print("nothing is being read")
             sleep(mBEEcommandperiod)
@@ -76,10 +76,10 @@ class main:
             telmsgwritten = False
 
         while (telmsgwritten == False):
-            if (self.writebusy == False):
-                self.writebusy = True
+            if (self.filewritebusy == False):
+                self.filewritebusy = True
                 self.filewriter(msg.name, msg.fieldvalues)
-                self.writebusy = False
+                self.filewritebusy = False
                 telmsgwritten == True
 
     def closeFile(self):
