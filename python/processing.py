@@ -1,6 +1,8 @@
 from time import sleep
 
+
 class processing:
+
     def __init__(self):
         print('intiailizing processing')
         self.lastattitude = None
@@ -21,8 +23,18 @@ class processing:
     def newmBEEhandler(self, msg):
         self.lastradar = msg
 
+    def bindserialandfile(self, mbserial, logfile):
+        self.serial = mbserserial;
+        self.logfile = logfile;
+
+    def getdata(void):
+        #self.logfile.writeline(stuff)
+        print("insert serial get stuff")
+        self.lastrar = self.logfile.readline(stuff)
+
     def runner(self):
         while (self.shutdown == False):
+            #getdata
             print("running the processing loop")
             sleep(1)
         print("shutting down the processing loop")

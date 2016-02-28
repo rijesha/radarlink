@@ -16,9 +16,7 @@ class main:
         self.initIVY()
         self.initFile()
         self.initmBEE()
-        if self.mBEElink.linksucess == True:
-            self.mBEETH = threading.Thread(target=self.mBEEhandler)
-            self.mBEETH.start()
+        self.proc.bindserialandfile(self.mBEElink,self.logfile)
         self.procTH = threading.Thread(target=self.proc.runner)
         self.procTH.start()
 
@@ -37,25 +35,6 @@ class main:
     def initmBEE(self):
         print("Initializing mBEE")
         self.mBEElink = mBEElinker.mBEEReader()
-        self.lastmBEEmsg = None
-        self.mBEEinfoavailable = False
-
-    def mBEEhandler(self, msg):
-        while (self.shutdown=False):
-            mBEEmsgwritten = True #change to false once msg code is enetered.
-            # insert code here for read/write commands
-            #           self.mBEElink.ser.write("command message")
-            #           msg = self.mBEElink.ser.Readline()
-            #           writetomaththread
-            while (mBEEmsgwritten == False):
-                if (self.filewritebusy == False):
-                    self.filewritebusy = True
-                    self.filewriter("mBEEmessage", msg)
-                    self.filewritebusy = False
-                    mBEEmsgwritten == True
-            print("nothing is being read")
-            sleep(mBEEcommandperiod)
-        self.mBEElink.__del__()
 
     def filewriter(self, name, msg):
         self.logfile.write(clock(), name + msg + "\n")
