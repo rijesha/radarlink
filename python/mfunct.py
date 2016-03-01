@@ -1,8 +1,33 @@
-def place_from_detect(centobjdet)
-	
-	
+import numpy
+import scipy
+
+def detfmovavg(frag)
+	#trying to detect from moving average
+	#frag is a small piece of the freq. spctrum
+	eps=0.01	
+	su=numpy.sum(frag)
+	re=numpy.size(frag)
+	t=round(re/2.0)
+	y=frag[t]
+	compare=su/re+eps
+	if(y>compare)
+		ret=1
+	else
+		ret=0
+	return ret
 
 
+
+def detfmdervi(frag)
+	
+	#trying to detect from derivative
+	return	
+	
+
+def obj_detec(frespec)
+	
+
+	favg=frespec[i]+frespec[i+1]+frespec[i+2]
 
 
 def vrel_from_freq(fobj)
@@ -23,18 +48,24 @@ def vrel_from_freq(fobj)
 	return vrel
 
 
-def line_from_vrel( vrel, 
+def line_from_vrel( vrel)
+	
 	return
 
 
 def mainfreq(frespec)
-	#a=np.arrange().reshape(,)
+	#returns tuple of the max value and 
+	#the frequency of that max value.
+	#a=numpy.arrange().reshape(,)
 	#
 	#
-	top=np.amax(frespec) 
+	top=numpy.amax(frespec) 
 	#hopefully returns max value
-	mainfreq=np.argmax(frespec)
+	mainfreq=numpy.argmax(frespec)
 	#hopefully returns frequency of peak value.
+	return (top,mainfreq)
+
+
 
 
 
