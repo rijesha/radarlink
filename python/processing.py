@@ -42,6 +42,7 @@ class processing:
             speed = self.lastgpsmsg.fieldvalues[5]
             altalt = self.lastestimator.fieldvalues[1]
             zone = self.lastgpsmsg.fieldvalues[9]
+            print(zone)
             print("running the processing loop")
             sleep(1)
         print("shutting down the processing loop")
