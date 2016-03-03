@@ -7,15 +7,15 @@ class processing:
         print('intiailizing processing')
         self.lastattitude = None
         self.lastestimator = None
-        self.lastgps = None
+        self.lastgpsmsg = None
         self.lastradar = None
         self.shutdown = False
 
     def newattitudehandler(self, msg):
         self.lastattitude = msg
 
-    def newgpsehandler(self, msg):
-        self.lastgps = msg
+    def newgpshandler(self, msg):
+        self.lastgpsmsg = msg
 
     def newestimatorhandler(self, msg):
         self.lastestimator = msg
@@ -35,13 +35,16 @@ class processing:
     def runner(self):
         while (self.shutdown == False):
             #getdata
-            utmeast = self.lastgpsmsg.fieldvalues[1]
-            utmnorth = self.lastgpsmsg.fielvalues[2]
-            course = self.lastgpsmsg.fieldvalues[3]
-            alt = self.lastgpsmsg.fielvalues[4]
-            speed = self.lastgpsmsg.fieldvalues[5]
-            altalt = self.lastestimator.fieldvalues[1]
-            zone = self.lastgpsmsg.fieldvalues[9]
+            utmeast = self.lastgpsmsg.utm_east
+            utmnorth = self.lastgpsmsg.utm_north
+            course = self.lastgpsmsg.course
+            alt = self.lastgpsmsg.alt
+            speed = self.lastgpsmsg.speed
+            zone = self.lastgpsmsg.utm_zone
+            altalt = self.lastestimator.z
+            itow = self.lastgpsmsg.itow
+            print(utmeast)
+            print(itow)
             print(zone)
             print("running the processing loop")
             sleep(1)

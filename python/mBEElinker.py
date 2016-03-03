@@ -3,14 +3,18 @@ import serial
 class mBEEReader(object):
     def __init__(self, callback = None):
         self.callback = callback
-        self.ser = serial.Serial('/dev/ttyS0',115200)
-        self.ser.open()
-        self.linksucess = self.ser.isOpen
+        try:
+            self.ser = serial.Serial('/dev/ttyS0',115200)
+            self.ser.open()
+            self.linksuccess = self.ser.isOpen
+        except:
+            self.linksuccess = False
 
-    def runner(self)
-        while (self.shutdown = False):
+
+    def runner(self):
+        while (self.shutdown == False):
 # insert code here for read/write commands
-        print("nothing is being read")
+            print("nothing is being read")
 #       ser.write and ser.Readline
 #        self.callback(receiveddata)
 
