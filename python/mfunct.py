@@ -62,7 +62,7 @@ def mainfreq(frespec)
 	#returns tuple of the max value and 
 	#the frequency of that max value.
 	#a=numpy.arrange().reshape(,)
-	#
+	#1 line extra
 	#
 	top=numpy.amax(frespec) 
 	#hopefully returns max value
