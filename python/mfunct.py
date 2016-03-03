@@ -19,9 +19,13 @@ def detfmovavg(frag)
 
 
 def detfmdervi(frag)
-	
+	# takes in piece of frequency spectrum
 	#trying to detect from derivative
-	return	
+	siz=numpy.size(frag)
+	for index in range(len(frag)-1)
+		myarr[index]=frag[index+1]-frag[index]
+	mybool=detfmovavg(myarr)		
+	return	mybool
 	
 
 def obj_detec(frespec)
@@ -43,6 +47,7 @@ def vrel_from_freq(fobj)
 	x=(fobj+fdbb-fvco)/fradar
 	c=300000000.0
 	vrel=c*(x-1.0)/(x+1.0)
+
 	if abs(vrel)>30.0 : print "vrel seems really high"
 		
 	return vrel

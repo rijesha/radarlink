@@ -35,6 +35,13 @@ class processing:
     def runner(self):
         while (self.shutdown == False):
             #getdata
+            utmeast = self.lastgpsmsg.fieldvalues[1]
+            utmnorth = self.lastgpsmsg.fielvalues[2]
+            course = self.lastgpsmsg.fieldvalues[3]
+            alt = self.lastgpsmsg.fielvalues[4]
+            speed = self.lastgpsmsg.fieldvalues[5]
+            altalt = self.lastestimator.fieldvalues[1]
+            zone = self.lastgpsmsg.fieldvalues[9]
             print("running the processing loop")
             sleep(1)
         print("shutting down the processing loop")
