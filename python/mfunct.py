@@ -1,6 +1,11 @@
 import numpy
 import scipy
+import math
 
+
+def wrapper(utmeast,utmnorth, course, alt, speed, zone, altalt,itow,freqspectrum)
+	
+	
 def detfmovavg(frag)
 	#trying to detect from moving average
 	#frag is a small piece of the freq. spctrum
@@ -71,6 +76,7 @@ def mainfreq(frespec)
 	return (top,mainfreq)
 
 
+def freqfromv()
 
 
 

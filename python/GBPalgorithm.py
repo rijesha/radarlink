@@ -33,9 +33,28 @@ def GBP()
 	#which corresponds to the same time as frespec
 	for x=1:1:nx
 		for y=1:1:ny
-			xdist=
-			ydsit=		
+			xdist=nx+blhc(2)-utmeast
+			ydsit=ny+blhc(1)-utmnorth		
+			h=sqrt(xdist^2+ydist^2)			
+			alpha=numpy.atan(ydist/xdist)
+			coursedeg=course*pi*180			
+			Beta=coursedeg-alpha			
+			fordir=h*numpy.cos(Beta)
+			siddir=h*numpy.sin(Beta)
+			vx=
+			vy=
+			vref=(vx*xdist+vy*ydist)/(math.sqrt(xdist**2 +ydist**2 +9))
+			freq=fradar*((c+vref)/(c-vref))
+			
+					
+				
+				
+				
+				
+			
+			
+				
 
-
+			
 
 
