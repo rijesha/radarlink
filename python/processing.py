@@ -40,7 +40,8 @@ class processing:
             utmnorth = self.lastgpsmsg.utm_north
             #meters north of point            
             course = self.lastgpsmsg.course
-            #angle of traveling, at instant?
+            #angle of traveling
+			# milidegree.
             alt = self.lastgpsmsg.alt
             #altitude above sea level?? meters. 
             speed = self.lastgpsmsg.speed

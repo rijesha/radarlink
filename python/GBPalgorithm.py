@@ -37,15 +37,17 @@ def GBP()
 			ydsit=ny+blhc(1)-utmnorth		
 			h=sqrt(xdist^2+ydist^2)			
 			alpha=numpy.atan(ydist/xdist)
-			coursedeg=course*pi*180			
-			Beta=coursedeg-alpha			
+			courserad=course*pi/18			
+			Beta=courserad-alpha			
 			fordir=h*numpy.cos(Beta)
 			siddir=h*numpy.sin(Beta)
-			vx=
-			vy=
+			vx=v*numpy.cos(courserad)
+			vy=v*numpy.sin(courserad)
 			vref=(vx*xdist+vy*ydist)/(math.sqrt(xdist**2 +ydist**2 +9))
 			freq=fradar*((c+vref)/(c-vref))
-			
+			freqoffset=freq-offset
+			#this probably won't work, freqoffset needs to be changed somehow.
+			arrr[x,y]=arrr[x,y]+frespec(freqoffset)
 					
 				
 				
