@@ -36,18 +36,29 @@ class processing:
         while (self.shutdown == False):
             #getdata
             utmeast = self.lastgpsmsg.utm_east
+            #meters east of point            
             utmnorth = self.lastgpsmsg.utm_north
+            #meters north of point            
             course = self.lastgpsmsg.course
+            #angle of traveling
+			# milidegree.
             alt = self.lastgpsmsg.alt
+            #altitude above sea level?? meters. 
             speed = self.lastgpsmsg.speed
+            #speed m/s not velocity
             zone = self.lastgpsmsg.utm_zone
-            print(self.lastestimator)
-            print(self.lastestimator.z)
+            #defines point which utm_east, utm_north are
+            #relative too.           
             altalt = self.lastestimator.z
+            #alternative altitude estimator (more accurate)?
             itow = self.lastgpsmsg.itow
+            #time not sure what format. 
             print(utmeast)
             print(itow)
             print(zone)
             print("running the processing loop")
+			wrapper(utmeast,utmnorth, course, alt, speed, zone, altalt,itow)    
+
+		
             sleep(1)
         print("shutting down the processing loop")
