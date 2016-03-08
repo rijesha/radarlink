@@ -29,3 +29,13 @@ class mBEEReader(object):
 
     def __del__(self):
         self.shutdown()
+
+    def bramread(blockname, datapoints):
+        data = []
+        for i=0:datapoints-1:
+            ser.writeLine('bramread' + blockname + str(i))
+            data = [data ser.readline()]
+
+        #convert into unsigned into
+        for i=1:datapoints:
+            data[i] = int(data[i],2)

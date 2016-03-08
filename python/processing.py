@@ -41,6 +41,8 @@ class processing:
             alt = self.lastgpsmsg.alt
             speed = self.lastgpsmsg.speed
             zone = self.lastgpsmsg.utm_zone
+            print(self.lastestimator)
+            print(self.lastestimator.z)
             altalt = self.lastestimator.z
             itow = self.lastgpsmsg.itow
             print(utmeast)

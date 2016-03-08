@@ -16,9 +16,9 @@ class main:
         self.initIVY()
         self.initFile()
         self.initmBEE()
-        self.procTH = threading.Thread(target=self.proc.runner)
-        sleep(1)
-        self.procTH.start()
+        #self.procTH = threading.Thread(target=self.proc.runner)
+        #sleep(3)
+        #self.procTH.start()
 
 
     def initprocessing(self):
@@ -36,13 +36,16 @@ class main:
         print("Initializing mBEE")
         self.mBEElink = mBEElinker.mBEEReader()
 
-    def filewriter(self, name, msg):
-        self.logfile.write(clock(), name + msg + "\n")
+    def filewriter(self, cputime, name, msg):
+        string = str(cputime) + " " + str(name) + " " + str(msg);
+        self.logfile.write(string + "\n")
 
     def msg_handler(self, acid, msg):
         #print("Telemetry message recieved")
         telmsgwritten = True
+	print(msg.name)
         if (msg.name == "GPS"):
+            print(msg.name)
             self.proc.newgpshandler(msg)
             telmsgwritten = False
 
@@ -51,15 +54,16 @@ class main:
             telmsgwritten = False
 
         if (msg.name == "ESTIMATOR"):
+            print(msg.name)
             self.proc.newestimatorhandler(msg)
             telmsgwritten = False
 
-#        while (telmsgwritten == False):
-#            if (self.filewritebusy == False):
-#                self.filewritebusy = True
-#                self.filewriter(msg.name, msg.fieldvalues)
-#                self.filewritebusy = False
-#                telmsgwritten == True
+        while (telmsgwritten == False):
+            if (self.filewritebusy == False):
+                self.filewritebusy = True
+                self.filewriter(clock(), msg.name, msg)
+                self.filewritebusy = False
+                telmsgwritten == True
 
     def closeFile(self):
         self.logfile.close()
