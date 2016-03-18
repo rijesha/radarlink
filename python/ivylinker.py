@@ -24,9 +24,8 @@ class CommandReader(object):
 
     def message_recv(self, ac_id, msg):
         if (self.verbose and self.callback != None):
-            print(msg)
             self.callback(ac_id, msg)
-            
+
 
     def shutdown(self):
         print("Shutting down ivy interface...")
