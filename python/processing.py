@@ -57,7 +57,7 @@ class processing:
             print(itow)
             print(zone)
             print("running the processing loop")
-			wrapper(utmeast,utmnorth, course, alt, speed, zone, altalt,itow)    
+          #  wrapper(utmeast,utmnorth, course, alt, speed, zone, altalt,itow)     #not sure what this is??
 
 		
             sleep(1)

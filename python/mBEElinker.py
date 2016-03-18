@@ -32,10 +32,10 @@ class mBEEReader(object):
 
     def bramread(blockname, datapoints):
         data = []
-        for i=0:datapoints-1:
+        for i in range(0,(datapoints-1)) :
             ser.writeLine('bramread' + blockname + str(i))
-            data = [data ser.readline()]
+            data = [data, ser.readline()]
 
         #convert into unsigned into
-        for i=1:datapoints:
+        for i in range(1, datapoints):
             data[i] = int(data[i],2)
