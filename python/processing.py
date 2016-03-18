@@ -9,9 +9,11 @@ class processing:
         self.gpsmutex = mutex()
         self.estmutex = mutex()
         self.attmutex = mutex()
+        self.radarmutex = mutex()
         self.att = None
         self.est = None
         self.gps = None
+        self.radar = None
         self.lastatt = None
         self.lastest = None
         self.lastgps = None
@@ -27,11 +29,14 @@ class processing:
             self.attmutex.lock(self.attmsg, msg)
         return True
 
+    def newradarmsg(self, msg):
+        self.radarmutex.lock(self.radarmsg, msg)
+
     def estmsg(self, msg=None):
         if msg != None:
             self.est = msg
         elif msg == None:
-            self.lastest = est
+            self.lastest = self.est
         self.estmutex.unlock()
 
     def gpsmsg(self, msg=None):
@@ -48,26 +53,27 @@ class processing:
             self.lastatt = self.att
         self.attmutex.unlock()
 
+    def radarmsg(self, msg=None):
+        if msg != None:
+            self.radar = msg
+        elif msg == None:
+            self.radar = self.radar
+        self.radarmutex.unlock()
 
+    def runner(self, period):
+        print("waiting for first telemetry message......")
+        while (self.gps == None or self.est == None or self.att == None):
+            sleep(.1)
+        print("all telemetry messages found")
 
-    def newmBEEhandler(self, msg):
-        self.lastradar = msg
+        if self.radar != None:
+            print("Got a radarmsg")
+        else:
+            print("processing without radarmsg")
 
-    def bindserialandfile(self, mbserial, logfile):
-        self.serial = mbserserial
-        self.logfile = logfile
-
-    def getdata(void):
-        # self.logfile.writeline(stuff)
-        print("insert serial get stuff")
-        self.lastrar = self.logfile.readline(stuff)
-
-
-
-    def runner(self):
         while (self.shutdown == False):
 
-            #these functions will update last***msg with the current msg
+            # these functions will update last***msg with the current msg
             self.gpsmutex.lock(self.gpsmsg, None)
             self.attmutex.lock(self.attmsg, None)
             self.estmutex.lock(self.estmsg, None)
@@ -77,7 +83,7 @@ class processing:
             # meters east of point
             utmnorth = self.lastgps.utm_north
             # meters north of point
-            course = float(self.lastgps.course)/10
+            course = float(self.lastgps.course) / 10
             # angle of traveling
             # unit of degree
             alt = self.lastgps.alt
@@ -91,12 +97,10 @@ class processing:
             # alternative altitude estimator (more accurate)?
             itow = self.lastgps.itow
             # time not sure what format.
-            print(utmeast)
-            print(itow)
+    #        print(utmeast)
+    #        print(itow)
             print(course)
-            print("running the processing loop")
           # wrapper(utmeast,utmnorth, course, alt, speed, zone, altalt,itow)
           # #not sure what this is??
-
-            sleep(1)
+            sleep(period)
         print("shutting down the processing loop")

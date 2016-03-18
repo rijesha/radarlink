@@ -26,7 +26,6 @@ class CommandReader(object):
         if (self.verbose and self.callback != None):
             self.callback(ac_id, msg)
 
-
     def shutdown(self):
         print("Shutting down ivy interface...")
         self._interface.shutdown()
