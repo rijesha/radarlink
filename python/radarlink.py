@@ -6,7 +6,7 @@ import mBEElinker
 import processing
 import mutex
 
-mBEErunnerperiod = 1
+mBEErunnerperiod = 3
 processingrunnerperiod = .1
 portname = '/dev/ttyS0'
 baudrate = 115200
@@ -21,7 +21,9 @@ class main:
         self.initFile()
         self.initIVY()
         self.initmBEE()
-        self.procTH = threading.Thread(target=self.proc.runner, args=[processingrunnerperiod])
+        self.procTH = threading.Thread(target=self.proc.runner, args=[processingrunnerperiod, self.mBEElink.linksuccess])
+        self.mBEETH = threading.Thread(target=self.mBEErunner)
+        mBEErunning = self.mBEETH.start() if self.mBEElink.linksuccess else 0
         self.procTH.start()
 
     def initprocessing(self):
@@ -56,13 +58,26 @@ class main:
             senttoproc = self.proc.newtelemetrymsg(msg) if self.procinitialized else 0
             self.filewritelock.lock(self.filewriter, [clock(), msg.to_dict()])
 
+    def mBEErunner(self):
+        while (self.shutdown == False):
+            ser.writeLineline('regwrite capture 1')
+            capturetime = clock()
+            ser.writeLineline('regwrite capture 0')
+            sleep(2)
+            I = bramread(ADC_RXI, 65536)
+            Q = bramread(ADC_RXQ, 65536)
+            FFT = bramread(fft, 65536)
+            senttoproc = self.proc.newradarm([I, Q, FFT]) if self.procinitialized else 0
+            self.filewritelock.lock(self.filewriter, [capturetime, I])
+            self.filewritelock.lock(self.filewriter, [capturetime, Q])
+            self.filewritelock.lock(self.filewriter, [capturetime, FFT])
+            sleep(mBEErunnerperiod)
+
     def closeFile(self):
         self.logfile.close()
 
     def shutdown(self):
-        # turns off mBEE link
         self.shutdown = True
-        # truns off processing
         self.proc.shutdown = True
         self.closeFile()
         self.ivylink.__del__()

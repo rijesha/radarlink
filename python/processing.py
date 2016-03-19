@@ -1,5 +1,6 @@
 from time import sleep
 from mutex import mutex
+import matplotlib.pyplot as plt
 
 
 class processing:
@@ -13,11 +14,10 @@ class processing:
         self.att = None
         self.est = None
         self.gps = None
-        self.radar = None
         self.lastatt = None
         self.lastest = None
         self.lastgps = None
-        self.lastradar = None
+        self.radarmsgavailable = False
         self.shutdown = False
 
     def newtelemetrymsg(self, msg):
@@ -28,9 +28,6 @@ class processing:
         elif msg.name == "ATTITUDE":
             self.attmutex.lock(self.attmsg, msg)
         return True
-
-    def newradarmsg(self, msg):
-        self.radarmutex.lock(self.radarmsg, msg)
 
     def estmsg(self, msg=None):
         if msg != None:
@@ -53,21 +50,32 @@ class processing:
             self.lastatt = self.att
         self.attmutex.unlock()
 
+    def newradarmsg(self, msg):
+        self.radarmutex.lock(self.radarmsg, msg)
+        self.radarmsg = True
+
     def radarmsg(self, msg=None):
         if msg != None:
-            self.radar = msg
+            self.I = msg[0]
+            self.Q = msg[1]
+            self.FFT = msg[2]
         elif msg == None:
-            self.radar = self.radar
+            self.lastI = self.I
+            self.lastQ = self.Q
+            self.lastFFT = self.FFT
         self.radarmutex.unlock()
 
-    def runner(self, period):
+    def runner(self, period, radarenable):
         print("waiting for first telemetry message......")
         while (self.gps == None or self.est == None or self.att == None):
             sleep(.1)
         print("all telemetry messages found")
 
-        if self.radar != None:
-            print("Got a radarmsg")
+        if radarenable == True:
+            print("waiting for first radar message.......")
+            while (self.radarmsgavailable != False):
+                sleep(.1)
+            print("Found Radar message")
         else:
             print("processing without radarmsg")
 
@@ -77,6 +85,11 @@ class processing:
             self.gpsmutex.lock(self.gpsmsg, None)
             self.attmutex.lock(self.attmsg, None)
             self.estmutex.lock(self.estmsg, None)
+
+            if radarenable == True:
+                self.radarmutex.lock(self.radarmsg, None)
+                plt.plot(lastFFT) #plot fft
+                plt.show()
 
             # getdata
             utmeast = self.lastgps.utm_north
