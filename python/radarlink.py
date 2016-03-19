@@ -1,6 +1,8 @@
 from time import clock, sleep, gmtime, strftime
 
 import threading
+import os
+import signal
 import ivylinker
 import mBEElinker
 import processing
@@ -16,12 +18,15 @@ class main:
 
     def __init__(self):
         self.shutdown = False
+        signal.signal(signal.SIGINT, self.shutdownfunc)
+        signal.signal(signal.SIGTERM, self.shutdownfunc)
         self.procinitialized = False
         self.initprocessing()
         self.initFile()
         self.initIVY()
         self.initmBEE()
-        self.procTH = threading.Thread(target=self.proc.runner, args=[processingrunnerperiod, self.mBEElink.linksuccess])
+        self.procTH = threading.Thread(target=self.proc.runner, args=[
+                                       processingrunnerperiod, self.mBEElink.linksuccess])
         self.mBEETH = threading.Thread(target=self.mBEErunner)
         mBEErunning = self.mBEETH.start() if self.mBEElink.linksuccess else 0
         self.procTH.start()
@@ -72,15 +77,22 @@ class main:
             self.filewritelock.lock(self.filewriter, [capturetime, Q])
             self.filewritelock.lock(self.filewriter, [capturetime, FFT])
             sleep(mBEErunnerperiod)
+        print("shutdown mBEErunner")
 
     def closeFile(self):
         self.logfile.close()
 
-    def shutdown(self):
+    def shutdownfunc(self, signum, frame):
         self.shutdown = True
         self.proc.shutdown = True
         self.closeFile()
         self.ivylink.__del__()
 
+
 if __name__ == "__main__":
-    main()
+    run = main()
+
+    while True:
+        if run.shutdown == True:
+            break
+        sleep(1)

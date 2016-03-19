@@ -68,12 +68,16 @@ class processing:
     def runner(self, period, radarenable):
         print("waiting for first telemetry message......")
         while (self.gps == None or self.est == None or self.att == None):
+            if self.shutdown == True:
+                break
             sleep(.1)
         print("all telemetry messages found")
 
         if radarenable == True:
             print("waiting for first radar message.......")
             while (self.radarmsgavailable != False):
+                if self.shutdown == True:
+                    break
                 sleep(.1)
             print("Found Radar message")
         else:
