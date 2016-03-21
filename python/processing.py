@@ -52,7 +52,8 @@ class processing:
 
     def newradarmsg(self, msg):
         self.radarmutex.lock(self.radarmsg, msg)
-        self.radarmsg = True
+	self.radarmsgavailable = True
+	return True
 
     def radarmsg(self, msg=None):
         if msg != None:
@@ -75,7 +76,7 @@ class processing:
 
         if radarenable == True:
             print("waiting for first radar message.......")
-            while (self.radarmsgavailable != False):
+            while (self.radarmsgavailable != True):
                 if self.shutdown == True:
                     break
                 sleep(.1)
@@ -92,7 +93,8 @@ class processing:
 
             if radarenable == True:
                 self.radarmutex.lock(self.radarmsg, None)
-                plt.plot(lastFFT) #plot fft
+		sleep(5)
+                plt.plot(self.lastI) #plot fft
                 plt.show()
 
             # getdata

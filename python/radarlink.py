@@ -10,7 +10,7 @@ import mutex
 
 mBEErunnerperiod = 3
 processingrunnerperiod = .1
-portname = '/dev/ttyS0'
+portname = '/dev/ttyUSB4'
 baudrate = 115200
 
 
@@ -65,14 +65,16 @@ class main:
 
     def mBEErunner(self):
         while (self.shutdown == False):
-            ser.writeLineline('regwrite capture 1')
+            self.mBEElink.ser.write('regwrite capture 1\r')
             capturetime = clock()
-            ser.writeLineline('regwrite capture 0')
+	    sleep(1)
+            self.mBEElink.ser.write('regwrite capture 0\r')
             sleep(2)
-            I = bramread(ADC_RXI, 65536)
-            Q = bramread(ADC_RXQ, 65536)
-            FFT = bramread(fft, 65536)
-            senttoproc = self.proc.newradarm([I, Q, FFT]) if self.procinitialized else 0
+            I = self.mBEElink.bramread('ADC_RXI', 1024)
+	    print("got ADC_RXi")
+            Q = self.mBEElink.bramread('ADC_RXQ', 1024)
+            FFT = self.mBEElink.bramread('Im', 1024)
+            senttoproc = self.proc.newradarmsg([I, Q, FFT]) if self.procinitialized else 0
             self.filewritelock.lock(self.filewriter, [capturetime, I])
             self.filewritelock.lock(self.filewriter, [capturetime, Q])
             self.filewritelock.lock(self.filewriter, [capturetime, FFT])
