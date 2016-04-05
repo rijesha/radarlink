@@ -23,17 +23,22 @@ class mBEEReader(object):
         self.shutdown()
 
     def bramread(self, blockname, datapoints):
-        data = [0] * (datapoints -1)
-        self.ser.write('bramdump ' + blockname +' '  + str(datapoints) + '\r')
+        self.data = []
+        self.ser.write('bramdumpvalue ' + blockname +' '  + str(datapoints) + '\r')
         time.sleep(.1)
         t1 = os.times()[4]
+        print(self.ser.readline())
 
-        for i in range(0, (datapoints - 1)):
-            data[i] = self.ser.readline()
 
+        self.num = 0
+        for self.num in range(0, datapoints-1):
+            line = self.ser.readline()
+            self.num = self.num+1            
+            if line:
+                self.data.append(line)
+            if not line or line[-1:] != '\n':
+                break
         print("read " + str(blockname) + " in " + str(os.times()[4] - t1) + " seconds" )
 
-        for i in range(1, datapoints-1):
-            h = data[i]
-            data[i] = h[len(h)-6 :len(h)-1]
+        return self.data
 

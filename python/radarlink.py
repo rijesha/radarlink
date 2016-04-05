@@ -65,19 +65,15 @@ class main:
 
     def mBEErunner(self):
         while (self.shutdown == False):
-            self.mBEElink.ser.write('regwrite capture 1\r')
+            #self.mBEElink.ser.write('regwrite capture 1\r')
             capturetime = clock()
-	    sleep(1)
-            self.mBEElink.ser.write('regwrite capture 0\r')
-            sleep(2)
-            I = self.mBEElink.bramread('ADC_RXI', 1024)
-	    print("got ADC_RXi")
-            Q = self.mBEElink.bramread('ADC_RXQ', 1024)
-            FFT = self.mBEElink.bramread('Im', 1024)
-            senttoproc = self.proc.newradarmsg([I, Q, FFT]) if self.procinitialized else 0
+	    #sleep(.5)
+            #self.mBEElink.ser.write('regwrite capture 0\r')
+            #sleep(2)
+            I = self.mBEElink.bramread('Q9', 1024)
+	    print("got Q9")
+            senttoproc = self.proc.newradarmsg([I]) if self.procinitialized else 0
             self.filewritelock.lock(self.filewriter, [capturetime, I])
-            self.filewritelock.lock(self.filewriter, [capturetime, Q])
-            self.filewritelock.lock(self.filewriter, [capturetime, FFT])
             sleep(mBEErunnerperiod)
         print("shutdown mBEErunner")
 

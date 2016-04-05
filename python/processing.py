@@ -58,21 +58,17 @@ class processing:
     def radarmsg(self, msg=None):
         if msg != None:
             self.I = msg[0]
-            self.Q = msg[1]
-            self.FFT = msg[2]
+           # self.Q = msg[1]
+           # self.FFT = msg[2]
         elif msg == None:
             self.lastI = self.I
-            self.lastQ = self.Q
-            self.lastFFT = self.FFT
+           # self.lastQ = self.Q
+           # self.lastFFT = self.FFT
         self.radarmutex.unlock()
 
     def runner(self, period, radarenable):
         print("waiting for first telemetry message......")
-        while (self.gps == None or self.est == None or self.att == None):
-            if self.shutdown == True:
-                break
-            sleep(.1)
-        print("all telemetry messages found")
+
 
         if radarenable == True:
             print("waiting for first radar message.......")
@@ -93,7 +89,7 @@ class processing:
 
             if radarenable == True:
                 self.radarmutex.lock(self.radarmsg, None)
-		sleep(5)
+		sleep(2)
                 plt.plot(self.lastI) #plot fft
                 plt.show()
 
