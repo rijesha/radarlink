@@ -27,18 +27,20 @@ class mBEEReader(object):
         self.ser.write('bramdumpvalue ' + blockname +' '  + str(datapoints) + '\r')
         time.sleep(.1)
         t1 = os.times()[4]
-        print(self.ser.readline())
-
-
         self.num = 0
         for self.num in range(0, datapoints-1):
             line = self.ser.readline()
-            self.num = self.num+1            
-            if line:
+            self.num = self.num+1
+            
+            try:
+                float(line)
                 self.data.append(line)
+            except:
+                print("")
+               # print("bad lin")            
             if not line or line[-1:] != '\n':
                 break
-        print("read " + str(blockname) + " in " + str(os.times()[4] - t1) + " seconds" )
 
+        print("read " + str(blockname) + " in " + str(os.times()[4] - t1) + " seconds" )
         return self.data
 

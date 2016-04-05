@@ -23,6 +23,8 @@ class processing:
         self.lastatt = None
         self.lastest = None
         self.lastgps = None
+        self.I = None
+        self.lastI = None
         self.radarmsgavailable = False
         self.shutdown = False
 
@@ -60,43 +62,29 @@ class processing:
         self.attmutex.unlock()
 
     def newradarmsg(self, msg):
-        self.radarmutex.lock(self.radarmsg, msg)
-        self.radarmsg = True
+    #    print("received new radar")
+        self.radarmutex.lock(self.radarmsg, [msg])
+        if self.radarmsgavailable == False:
+            sleep(.2)
+            self.radarmsgavailable = True
 
     def radarmsg(self, msg=None):
         if msg != None:
+       #     print(msg[0])
             self.I = msg[0]
-           # self.Q = msg[1]
-           # self.FFT = msg[2]
+    #        print("wrote to I")
         elif msg == None:
             self.lastI = self.I
-<<<<<<< HEAD
-           # self.lastQ = self.Q
-           # self.lastFFT = self.FFT
-=======
-            self.lastQ = self.Q
-            self.lastFFT = self.FFT
-            self.radaravail.set()
->>>>>>> 49ae7877f556c155596ad5cf63a4f196b16a818c
+            self.radarupdate.set()
         self.radarmutex.unlock()
 
 
-
-
-
-
-
-
     def runner(self, period, radarenable):
-<<<<<<< HEAD
-        print("waiting for first telemetry message......")
-
-=======
->>>>>>> 49ae7877f556c155596ad5cf63a4f196b16a818c
 
         if radarenable == True:
             print("waiting for first radar message.......")
             while (self.radarmsgavailable != False):
+                print("waiting for radar message")
                 if self.shutdown == True:
                     break
                 sleep(.1)
@@ -105,10 +93,9 @@ class processing:
             print("processing without radarmsg")
 
 
-
-
         print("waiting for first telemetry message......")
         while (self.gps == None or self.est == None or self.att == None):
+           # print("still waiting")
             if self.shutdown == True:
                 break
             sleep(.1)
@@ -117,10 +104,7 @@ class processing:
             return 0
         print("all telemetry messages found")
 
-
-
-
-
+        
         while (self.shutdown == False):
 
             # these functions will update last***msg with the current msg
@@ -130,18 +114,16 @@ class processing:
             self.attavail.wait()
             self.estmutex.lock(self.estmsg, None)
             self.estavail.wait()
-
-
+            sleep(1)
+            
+            
             if radarenable == True:
                 self.radarmutex.lock(self.radarmsg, None)
-<<<<<<< HEAD
-		sleep(2)
-                plt.plot(self.lastI) #plot fft
-=======
-                self.radaravail.wait()
-                plt.plot(lastFFT) #plot fft
->>>>>>> 49ae7877f556c155596ad5cf63a4f196b16a818c
-                plt.show()
+                self.radarupdate.wait()
+                print("New Radar MSG in Proc Loop")
+          #      print(self.lastI)
+       #         plt.plot(self.lastI) #plot fft
+    #            plt.show()
 
             # getdata
             utmeast = self.lastgps.utm_north

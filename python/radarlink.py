@@ -8,8 +8,8 @@ import mBEElinker
 import processing
 import mutex
 
-mBEErunnerperiod = 3
-processingrunnerperiod = .1
+mBEErunnerperiod = .1
+processingrunnerperiod = .5
 portname = '/dev/ttyUSB4'
 baudrate = 115200
 
@@ -29,6 +29,7 @@ class main:
                                        processingrunnerperiod, self.mBEElink.linksuccess])
         self.mBEETH = threading.Thread(target=self.mBEErunner, args=[self.mBEElink.linksuccess])
         self.mBEETH.start()
+        print("startedmbeethread")
         self.procTH.start()
 
     def initprocessing(self):
@@ -73,8 +74,9 @@ class main:
                 #self.mBEElink.ser.write('regwrite capture 0\r')
                 #sleep(2)
                 I = self.mBEElink.bramread('Q9', 1024)
-    	    print("got Q9")
-                senttoproc = self.proc.newradarmsg([I]) if self.procinitialized else 0
+    	        #print("got Q9")
+                senttoproc = self.proc.newradarmsg(I) if self.procinitialized else 0
+   #             print("I transferred to processing")
                 self.filewritelock.lock(self.filewriter, [capturetime, I])
                 sleep(mBEErunnerperiod)
             print("shutdown mBEErunner")
