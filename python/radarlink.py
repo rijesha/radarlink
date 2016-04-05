@@ -27,8 +27,8 @@ class main:
         self.initmBEE()
         self.procTH = threading.Thread(target=self.proc.runner, args=[
                                        processingrunnerperiod, self.mBEElink.linksuccess])
-        self.mBEETH = threading.Thread(target=self.mBEErunner)
-        mBEErunning = self.mBEETH.start() if self.mBEElink.linksuccess else 0
+        self.mBEETH = threading.Thread(target=self.mBEErunner, args=[self.mBEElink.linksuccess])
+        self.mBEETH.start()
         self.procTH.start()
 
     def initprocessing(self):
@@ -63,19 +63,21 @@ class main:
             senttoproc = self.proc.newtelemetrymsg(msg) if self.procinitialized else 0
             self.filewritelock.lock(self.filewriter, [clock(), msg.to_dict()])
 
-    def mBEErunner(self):
-        while (self.shutdown == False):
-            #self.mBEElink.ser.write('regwrite capture 1\r')
-            capturetime = clock()
-	    #sleep(.5)
-            #self.mBEElink.ser.write('regwrite capture 0\r')
-            #sleep(2)
-            I = self.mBEElink.bramread('Q9', 1024)
-	    print("got Q9")
-            senttoproc = self.proc.newradarmsg([I]) if self.procinitialized else 0
-            self.filewritelock.lock(self.filewriter, [capturetime, I])
-            sleep(mBEErunnerperiod)
-        print("shutdown mBEErunner")
+
+    def mBEErunner(self, runnerenable):
+        if runnerenable:
+            while (self.shutdown == False):
+                #self.mBEElink.ser.write('regwrite capture 1\r')
+                capturetime = clock()
+    	    #sleep(.5)
+                #self.mBEElink.ser.write('regwrite capture 0\r')
+                #sleep(2)
+                I = self.mBEElink.bramread('Q9', 1024)
+    	    print("got Q9")
+                senttoproc = self.proc.newradarmsg([I]) if self.procinitialized else 0
+                self.filewritelock.lock(self.filewriter, [capturetime, I])
+                sleep(mBEErunnerperiod)
+            print("shutdown mBEErunner")
 
     def closeFile(self):
         self.logfile.close()
